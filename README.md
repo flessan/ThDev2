@@ -28,4 +28,3 @@
 - Receiving Feedback  
 - Leaderboards  
 - etc.
-- 
