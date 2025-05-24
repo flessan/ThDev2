@@ -26,5 +26,5 @@
 ✅ Features:  
 - Server Asia  
 - Receiving Feedback  
-- Leaderboards  
+- NSFW On Off  
 - etc.
