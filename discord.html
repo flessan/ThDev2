@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Server Widget</title>
+    <style>
+        body {
+            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #36393f;
+            color: #dcddde;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .discord-widget {
+            background-color: #2f3136;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .server-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .server-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            background-color: #7289da;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+        }
+        
+        .server-info h2 {
+            margin: 0;
+            color: white;
+        }
+        
+        .server-info p {
+            margin: 5px 0;
+        }
+        
+        .join-button {
+            display: inline-block;
+            background-color: #7289da;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+        
+        .join-button:hover {
+            background-color: #677bc4;
+        }
+        
+        .members-list {
+            margin-top: 20px;
+        }
+        
+        .members-list h3 {
+            border-bottom: 1px solid #40444b;
+            padding-bottom: 10px;
+            color: white;
+        }
+        
+        .member {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #40444b;
+        }
+        
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .member-name {
+            flex-grow: 1;
+        }
+        
+        .member-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-online {
+            background-color: #3ba55c;
+        }
+        
+        .status-idle {
+            background-color: #faa61a;
+        }
+        
+        .status-dnd {
+            background-color: #ed4245;
+        }
+        
+        .member-activity {
+            font-size: 0.9em;
+            color: #b9bbbe;
+            margin-top: 2px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .error {
+            color: #ed4245;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="discord-widget">
+        <div id="loading" class="loading">
+            <p>Loading server information...</p>
+        </div>
+        
+        <div id="widget-content" style="display: none;">
+            <div class="server-header">
+                <div class="server-icon" id="server-icon">D</div>
+                <div class="server-info">
+                    <h2 id="server-name">Server Name</h2>
+                    <p><span id="online-count">0</span> members online</p>
+                    <a href="https://discord.gg/6HEyQBcM6E" class="join-button">Join Server</a>
+                </div>
+            </div>
+            
+            <div class="members-list">
+                <h3>Online Members</h3>
+                <div id="members-container"></div>
+            </div>
+        </div>
+        
+        <div id="error-message" class="error" style="display: none;">
+            <p>Failed to load server information. Please try again later.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const widgetUrl = 'https://discord.com/api/guilds/876754832113958912/widget.json';
+            
+            fetch(widgetUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Update server info
+                    document.getElementById('server-name').textContent = data.name;
+                    document.getElementById('online-count').textContent = data.presence_count;
+                    document.getElementById('server-icon').textContent = data.name.charAt(0);
+                    
+                    // Create members list
+                    const membersContainer = document.getElementById('members-container');
+                    
+                    if (data.members && data.members.length > 0) {
+                        data.members.forEach(member => {
+                            const memberElement = document.createElement('div');
+                            memberElement.className = 'member';
+                            
+                            // Status indicator
+                            let statusClass = 'status-online';
+                            if (member.status === 'idle') statusClass = 'status-idle';
+                            if (member.status === 'dnd') statusClass = 'status-dnd';
+                            
+                            // Avatar or default
+                            const avatarUrl = member.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png';
+                            
+                            // Activity text
+                            let activityText = '';
+                            if (member.activity && member.activity.name) {
+                                activityText = `Playing ${member.activity.name}`;
+                            }
+                            
+                            memberElement.innerHTML = `
+                                <img src="${avatarUrl}" alt="${member.username}" class="member-avatar" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
+                                <div class="member-name">
+                                    ${member.username}
+                                    ${activityText ? `<div class="member-activity">${activityText}</div>` : ''}
+                                </div>
+                                <div class="${statusClass} member-status"></div>
+                            `;
+                            
+                            membersContainer.appendChild(memberElement);
+                        });
+                    } else {
+                        membersContainer.innerHTML = '<p>No members currently online.</p>';
+                    }
+                    
+                    // Show content
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('widget-content').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error fetching widget data:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('error-message').style.display = 'block';
+                });
+        });
+    </script>
+</body>
+</html>
