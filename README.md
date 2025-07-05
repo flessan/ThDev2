@@ -1,15 +1,15 @@
 # 👋 Hi, I'm Fless!  
 `💻 GDPS Developer | 🎮 Geometry Dash Enthusiast`  
 
-[![Profile Views](https://komarev.com/ghpvc/?username=ThDev2&color=blue&style=flat-square)](https://github.com/ThDev2)
-[![GitHub Followers](https://img.shields.io/github/followers/ThDev2?label=Follow%20Me&style=social)](https://github.com/ThDev2)
-[![GDPS](https://img.shields.io/badge/GDPS-FrGDPS-orange)](https://github.com/ThDev2/FrGDPS)
+[![Profile Views](https://komarev.com/ghpvc/?username=flessan&color=blue&style=flat-square)](https://github.com/flessan)
+[![GitHub Followers](https://img.shields.io/github/followers/flessan?label=Follow%20Me&style=social)](https://github.com/flessan)
+[![GDPS](https://img.shields.io/badge/GDPS-FrGDPS-orange)](https://github.com/flessan/FrGDPS)
 
 ---
 
 ### 📊 GitHub Stats  
-![](https://github-readme-stats.vercel.app/api?username=ThDev2&show_icons=true&theme=radical)
-![](https://github-readme-streak-stats.herokuapp.com/?user=ThDev2&theme=radical)
+![](https://github-readme-stats.vercel.app/api?username=flessan&show_icons=true&theme=radical)
+![](https://github-readme-streak-stats.herokuapp.com/?user=flessan&theme=radical)
 
 ---
 
